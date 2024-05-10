@@ -6,6 +6,8 @@ from .models import Menu,Booking
 from .serializers import MenuSerializer,BookingSerializer
 from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth.models import User
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
@@ -13,7 +15,9 @@ def index(request):
     return render(request, 'index.html',{})
 
 #It return all the menu items
+
 class MenuItemsView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
     
@@ -38,6 +42,7 @@ class MenuItemsView(generics.ListCreateAPIView):
 
 #It returns single menu item based on id
 class SingleMenuItemView(generics.RetrieveUpdateAPIView,generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
     
@@ -45,6 +50,7 @@ class SingleMenuItemView(generics.RetrieveUpdateAPIView,generics.DestroyAPIView)
     
 #This class returns booking details
 class BookingViewSet(ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
 
@@ -52,4 +58,8 @@ class BookingViewSet(ModelViewSet):
 #    queryset = User.objects.all() 
 #    serializer_class = UserSerializer
 #    permission_classes = [permissions.IsAuthenticated] 
-        
+
+@api_view()
+@permission_classes([IsAuthenticated])
+def msg(request):
+    return Response({'message':"This is protected view"})
