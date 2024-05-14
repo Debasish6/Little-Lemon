@@ -17,10 +17,12 @@ class MenuViewTest(TestCase):
          
         
     def test_getall(self):
+        #It receives url of Menu Item Views
+        """Name must be declared as MenuItemsView in urls.py(app) file"""
         url = reverse('MenuItemsView')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code,200)
+        response = self.client.get(url) # It gets some response from above url as Html status code
+        self.assertEqual(response.status_code,200) # If Status code equal to 200 then assertion is true otherwise test would be failed.
         
-        items = Menu.objects.all()
-        serializer = MenuSerializer(items, many = True)
-        self.assertEqual(serializer.data, response.data)
+        items = Menu.objects.all() # It returns all object of Menu model
+        serializer = MenuSerializer(items, many = True) # It serialize data of item
+        self.assertEqual(serializer.data, response.data) # If serialize data is equal to response data then test would be Passed. 
