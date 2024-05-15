@@ -63,3 +63,7 @@ class BookingViewSet(ModelViewSet):
 @permission_classes([IsAuthenticated])
 def msg(request):
     return Response({'message':"This is protected view"})
+
+
+
+
