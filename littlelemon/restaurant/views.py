@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Menu,Booking
 from .serializers import MenuSerializer,BookingSerializer
@@ -27,6 +27,10 @@ class MenuItemsView(generics.ListCreateAPIView):
     #     return Response(serialize_item.data)
     
     # def post(self,request):
+    #     if request.user.groups.filter(name = 'Manager').exists() or request.user.is_superuser:
+    #         return super().post(request)
+    #     return Response({'Message' : 'You are not Authorized'}, status = status.HTTP_403_FORBIDDEN)
+    # def post(self,request):
     #     # title = request.POST.get('Title')
     #     # price = request.POST.get('Price')
     #     # inventory = request.POST.get('inventory')
@@ -39,6 +43,21 @@ class MenuItemsView(generics.ListCreateAPIView):
     #     serialized_item.is_valid(raise_exception=True)
     #     serialized_item.save()
     #     return Response(serialized_item.data)
+    
+    # def put(self, request):
+    #     if request.user.groups.filter(name = 'Manager').exists() or request.user.is_superuser:
+    #         return super().post(request)
+    #     return Response({"message": "You are not authorized"}, status = status.HTTP_403_FORBIDDEN)
+
+    # def patch(self, request):
+    #     if request.user.groups.filter(name = 'Manager').exists() or request.user.is_superuser:
+    #         return super().post(request)
+    #     return Response({"message": "You are not authorized"}, status = status.HTTP_403_FORBIDDEN)
+
+    # def delete(self, request):
+    #     if request.user.groups.filter(name = 'Manager').exists() or request.user.is_superuser:
+    #         return super().post(request)
+    #     return Response({"message": "You are not authorized"}, status = status.HTTP_403_FORBIDDEN)
 
 #It returns single menu item based on id
 class SingleMenuItemView(generics.RetrieveUpdateAPIView,generics.DestroyAPIView):
@@ -46,7 +65,24 @@ class SingleMenuItemView(generics.RetrieveUpdateAPIView,generics.DestroyAPIView)
     queryset = Menu.objects.all()
     serializer_class = MenuSerializer
     
-    # def get(self,request,pk):
+    def get(self, request, *args, **kwargs):
+        return super().get(request,*args,**kwargs)
+    
+    def put(self, request,*args, **kwargs):
+        if request.user.group.filter(name='Manager').exists():
+            return super().put(request,*args, **kwargs)
+        return Response({'Message':'You are Not authorized'},status=status.HTTP_403_FORBIDDEN)
+    
+    def patch(self, request, *args, **kwargs):
+        if request.user.group.filter(name = 'Manager').exists():
+            return super().patch(request,*args, **kwargs)
+        return Response({'Message':'You are Not authorized'},status=status.HTTP_403_FORBIDDEN)
+    
+    def delete(self, request, *args, **kwargs):
+        if request.user.groups.filter(name = 'Manager').exists():
+            return super().delete(request, *args, **kwargs)
+        return Response({"message": "You are not authorized"}, status = status.HTTP_403_FORBIDDEN)
+
     
 #This class returns booking details
 class BookingViewSet(ModelViewSet):

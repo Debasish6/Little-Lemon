@@ -19,7 +19,7 @@ from django.urls import path,include
 from rest_framework.routers import DefaultRouter
 from restaurant import views
 
-# Create a router and register our ViewSets with it
+# Create a router and register our ViewSets with in it
 router = DefaultRouter()
 router.register(r'tables', views.BookingViewSet)
 
