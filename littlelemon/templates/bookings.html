@@ -30,7 +30,7 @@
 <script>
   const bookings = JSON.parse('{{ bookings|safe }}')
   let table = '<table>';
-  table += '<tr><th>Name</th><th>No. of Guests</th><th>Booking Date</th></tr>';
+  table += '<tr><th>name</th><th>no_of_guests</th><th>booking_date</th></tr>';
   for (const booking of bookings) {
     table += `<tr><td>${booking.fields.name}</td><td>${booking.fields.no_of_guests}</td><td>${booking.fields.booking_date}</td></tr>`;
   }
